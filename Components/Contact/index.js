@@ -1,14 +1,16 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React from 'react';
+import { StyleSheet} from 'react-native';
+import Liste from './liste';
 
-const index = () => {
+
+const Index = () => {
     return (
-        <View>
-            <Text></Text>
-        </View>
+        
+        <Liste/>
+        
     )
 }
 
-export default index
+export default Index
 
 const styles = StyleSheet.create({})

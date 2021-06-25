@@ -1,5 +1,7 @@
 import { combineReducers } from "redux";
-import exemple from "./exemple";
+import modal from "./modal";
+import contacts from "./contacts";
 
 
-export default combineReducers({exemple});
+export default combineReducers({modal,
+                                contacts});
