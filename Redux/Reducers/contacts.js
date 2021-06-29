@@ -1,20 +1,30 @@
-import {ADD_CONTACT} from '../Actions/types';
+import {ADD_CONTACT,DELELTE_CONTACT,UP_CONTACT} from '../Actions/types';
 
-initStateContact=[ {
-    id: 1,
-    name: 'Amy Farha',
-    avatar_url: 'https://img.icons8.com/ios/452/contacts.png',
-    subtitle: 'Vice President'
-  }];
+initStateContact=[ ];
 
 const contacts = (state= initStateContact , action) => {
     console.log(action)
     switch (action.type) {
-     /*   case AFF_MODAL:
-            return action.payload;
-        break;*/
         case ADD_CONTACT:
             return [...state,action.payload]
+        break;
+        case DELELTE_CONTACT:
+            
+        const newContacts = state.filter(contact => contact.id !== action.payload )
+          
+            return newContacts;
+          //  return action.payload
+        break;
+        case UP_CONTACT:
+                            /********** Boucle sur mon state avec map *******/
+            const newData = state.map(contact=>{ 
+                /********** Si il y a un id qui  correspond on change le contenu du state ************/
+                if(contact.id === action.payload.id){
+                    return action.payload
+                }
+                return contact })
+            
+            return newData
         break;
         default:
             return state

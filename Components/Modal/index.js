@@ -1,16 +1,19 @@
-import React,{useState} from 'react';
+import React,{useState, useContext} from 'react';
 import {View,StyleSheet} from 'react-native';
 import {Button,Text, Overlay,Input } from 'react-native-elements';
 import {useSelector, useDispatch} from 'react-redux';
 import {showModal} from '../../Redux/Actions/modal';
 import {AjoutContact} from '../../Redux/Actions/contacts';
+import {FirebaseContext} from '../../FirebaseContext';
 
 
 const index = () => {
 
+   const {queryAddContact} = useContext(FirebaseContext)
+   
     const {modal , contacts} = useSelector(state => state);
     const dispatch = useDispatch();
-
+   
     const [name, setName] = useState("");
 
     const toggleOverlay = () => {
@@ -22,14 +25,13 @@ const index = () => {
         setName(name);
     }
     const saveName = () => {
-        dispatch(AjoutContact(
+        queryAddContact(
             {
-                id: contacts.length + 1,
                 name,
                 avatar_url: 'https://img.icons8.com/ios/452/contacts.png',
                 subtitle: 'nc'
-            }))
-        console.log("name",name)
+            });
+        //console.log("name",name)
         toggleOverlay();
 
     }
