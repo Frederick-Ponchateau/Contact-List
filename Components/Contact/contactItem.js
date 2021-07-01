@@ -1,10 +1,10 @@
-import React,{useContext} from 'react';
-import {Text, View } from 'react-native';
+import React,{useContext,useState} from 'react';
+import {Text, View,ActivityIndicator } from 'react-native';
 import styles from './styles';
 import { Button,ListItem, Avatar ,Icon} from 'react-native-elements';
 import {useSelector,useDispatch} from 'react-redux';
 import {FirebaseContext} from '../../FirebaseContext';
-import { AjoutFavory } from '../../Redux/Actions/contacts';
+import {launchCamera,launchImageLibrary} from 'react-native-image-picker';
 
 
 
@@ -18,20 +18,50 @@ const Item = ({ title }) => (
   
   
   const ContactItem = ({ item}) => {
-    const {queryDelContact,queryUpdateContact} = useContext(FirebaseContext)
-    const {contacts} = useSelector(state => state);
+    const {queryDelContact,queryUpdateContact,storageImg,storageGetImg} = useContext(FirebaseContext)
     const dispatch = useDispatch();
 
     const suppContact = (id) => {
-      console.log("supp : ",id)
       queryDelContact(id)
     }
-   const favory = (id) => {
+    const favory = () => {
      queryUpdateContact(item.id,{favoris:!item.favoris})
      
      }
-   const color = item.favoris?'#b9ff03': 'blue';
-   
+    const [loading, setLoading] = useState(false)
+    const color = item.favoris?'#b9ff03': 'blue';
+
+    const editImg = () => {
+      console.log("object",item.id);
+      let options = {
+        storageOptions: {
+          skipBackup: true,
+          path: 'images',
+        },
+      };
+      launchCamera(options, (response) => {
+        console.log('Response = ', response);
+        if (response.assets!=undefined ) {
+         setLoading(true)
+         //Bloc de code
+         const {uri} = response.assets[0] ;
+         console.log("uri : ",uri);
+         storageImg(item.id,"name.jpg",uri).then(res=>{
+          console.log(res);
+          storageGetImg(item.id,"name.jpg").then(url => {
+            queryUpdateContact(item.id,{
+              avatar_url: url
+            })
+           setLoading(false)
+            
+          })
+        }
+
+         )
+      }
+     })
+    }
+    
    
     return(
 
@@ -48,7 +78,9 @@ const Item = ({ title }) => (
   >
     
     
-        <Avatar source={{uri: item.avatar_url}} />
+        {loading? <ActivityIndicator color="#eb3300" />:<Avatar 
+              source={{uri: item.avatar_url}}
+              onPress={editImg} />}
         <ListItem.Content>
             <ListItem.Title>{item.name}</ListItem.Title>
             <ListItem.Subtitle>{item.subtitle}</ListItem.Subtitle>
@@ -56,7 +88,7 @@ const Item = ({ title }) => (
         <Icon
         name='star' 
         color={color}
-          onPress={()=> favory(item.id)}
+          onPress={()=> favory()}
         />
     </ListItem.Swipeable>
       )};

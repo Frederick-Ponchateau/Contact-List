@@ -1,13 +1,18 @@
-import React ,{useContext,useEffect} from 'react';
+import React ,{useContext,useEffect,useState} from 'react';
 import { StyleSheet,StatusBar,SafeAreaView} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+import {FirebaseContext} from './FirebaseContext';
+
+import {AjoutContact,DeleteContact,UpdateContact } from './Redux/Actions/contacts';
+import {useDispatch,useSelector} from 'react-redux';
+
 import Header from './Components/Header';
 import Contact from './Components/Contact';
 import  Fab  from './Components/Fab';
 import Modal from './Components/Modal';
-import {FirebaseContext} from './FirebaseContext';
-import {AjoutContact,DeleteContact,UpdateContact } from './Redux/Actions/contacts';
-import {useDispatch,useSelector} from 'react-redux';
-
+import Login from './Components/Login';
 
 
 const initContacts = (queryAllContact,dispatch) => {
@@ -34,7 +39,27 @@ const initContacts = (queryAllContact,dispatch) => {
     });
   })
 }
-const App = () => {
+const Stack = createStackNavigator();
+
+const  App=()=> {
+  const {auth} = useContext(FirebaseContext);
+  const [user, setUser] = useState(null)
+  useEffect(() => {
+    const authChange = auth().onAuthStateChanged(user=>{
+      console.log("user",user)
+    });
+    return authChange; // unsubscribe on unmount
+  }, []);
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        {user?<Stack.Screen name="Home" component={Home} />:<Stack.Screen name="Login" component={Login} />}
+        
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+const Home = () => {
   const {queryAllContact} = useContext(FirebaseContext)
   const dispatch = useDispatch();
   
