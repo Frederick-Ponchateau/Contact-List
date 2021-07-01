@@ -14,14 +14,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "654087375450-nl3ofdnc5eqml91c0neto89ltamp84go.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.appfood",
-            "certificate_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
-          }
-        },
-        {
           "client_id": "654087375450-t4kkagasq1fa6s3ndqli1pknglca6me6.apps.googleusercontent.com",
           "client_type": 3
         }
